@@ -11,6 +11,9 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, {
 console.log(users);
 
 const getLengthOfUsers = function () {
+  console.log(users);
+  console.log(users.filter((el) => el.status === true));
+  console.log(users.filter((el) => el.status === true).length);
   return users.filter((el) => el.status === true).length;
 };
 // users.filter((el) => el.status === true).length
@@ -216,7 +219,15 @@ bot.onText(/\/tickets/, (msg) => {
   console.log(getLengthOfUsers());
   bot.sendMessage(
     helper.getChatId(msg),
-    getLengthOfUsers() > 0 ? texts.textForTickets : texts.textForEmptyTickets,
+    getLengthOfUsers() > 0
+      ? `Усього квитків залишилося: *${
+          100 - getLengthOfUsers()
+        }* / 100\n\nЩе залишилося по 250грн: *${
+          50 - getLengthOfUsers() > 0 ? 50 - getLengthOfUsers() : 0
+        }* із 40\n\nЗалишилося по 300грн.: *${
+          getLengthOfUsers() < 51 ? 50 : 100 - getLengthOfUsers()
+        } / 50*`
+      : texts.textForEmptyTickets,
     {
       parse_mode: "Markdown",
     }
